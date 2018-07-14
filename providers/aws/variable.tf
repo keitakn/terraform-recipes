@@ -4,10 +4,6 @@ variable "common" {
   default = {
     default.region  = "ap-northeast-1"
     default.project = "terraform-recipes"
-
-    dev.region = "ap-northeast-1"
-    stg.region = "ap-northeast-1"
-    prd.region = "ap-northeast-1"
   }
 }
 

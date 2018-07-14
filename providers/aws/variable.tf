@@ -15,8 +15,8 @@ variable "vpc" {
   type = "map"
 
   default = {
-    default.cidr = "192.0.0.0/16"
-    stg.cidr     = "192.1.0.0/16"
-    prd.cidr     = "192.2.0.0/16"
+    default.cidr = "10.0.0.0/16"
+    stg.cidr     = "10.1.0.0/16"
+    dev.cidr     = "10.2.0.0/16"
   }
 }

@@ -39,8 +39,9 @@ secret_key = "YOUR_SECRET_KEY"
 
 `workspace` を新規作成するには以下のように実行します。
 
-`dev`, `stg` , `prd` 全ての環境で利用する場合は以下のコマンドを全て実行して下さい。
+`qa`, `dev`, `stg`, `prd` 全ての環境で利用する場合は以下のコマンドを全て実行して下さい。
 
+- `terraform workspace new qa`
 - `terraform workspace new dev`
 - `terraform workspace new stg`
 - `terraform workspace new prd`

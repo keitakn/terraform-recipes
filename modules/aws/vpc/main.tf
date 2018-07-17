@@ -63,3 +63,82 @@ resource "aws_subnet" "public_1d" {
     Name = "${terraform.workspace}-public-1d"
   }
 }
+
+resource "aws_nat_gateway" "nat_1a" {
+  allocation_id = "${aws_eip.nat_ip_1a.id}"
+  subnet_id     = "${aws_subnet.public_1a.id}"
+
+  tags {
+    Name = "${terraform.workspace}-1a"
+  }
+}
+
+resource "aws_nat_gateway" "nat_1c" {
+  allocation_id = "${aws_eip.nat_ip_1c.id}"
+  subnet_id     = "${aws_subnet.public_1c.id}"
+
+  tags {
+    Name = "${terraform.workspace}-1c"
+  }
+}
+
+resource "aws_nat_gateway" "nat_1d" {
+  allocation_id = "${aws_eip.nat_ip_1d.id}"
+  subnet_id     = "${aws_subnet.public_1d.id}"
+
+  tags {
+    Name = "${terraform.workspace}-1d"
+  }
+}
+
+resource "aws_route_table" "public" {
+  vpc_id = "${aws_vpc.vpc.id}"
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = "${aws_internet_gateway.igw.id}"
+  }
+
+  tags {
+    Name = "public-rt"
+  }
+}
+
+resource "aws_route_table" "private_1a" {
+  vpc_id = "${aws_vpc.vpc.id}"
+
+  route {
+    cidr_block     = "0.0.0.0/0"
+    nat_gateway_id = "${aws_nat_gateway.nat_1a.id}"
+  }
+
+  tags {
+    Name = "private-rt-1a"
+  }
+}
+
+resource "aws_route_table" "private_1c" {
+  vpc_id = "${aws_vpc.vpc.id}"
+
+  route {
+    cidr_block     = "0.0.0.0/0"
+    nat_gateway_id = "${aws_nat_gateway.nat_1c.id}"
+  }
+
+  tags {
+    Name = "private-rt-1c"
+  }
+}
+
+resource "aws_route_table" "private_1d" {
+  vpc_id = "${aws_vpc.vpc.id}"
+
+  route {
+    cidr_block     = "0.0.0.0/0"
+    nat_gateway_id = "${aws_nat_gateway.nat_1d.id}"
+  }
+
+  tags {
+    Name = "private-rt-1d"
+  }
+}

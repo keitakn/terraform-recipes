@@ -64,6 +64,36 @@ resource "aws_subnet" "public_1d" {
   }
 }
 
+resource "aws_subnet" "private_1a" {
+  vpc_id            = "${aws_vpc.vpc.id}"
+  cidr_block        = "${lookup(var.vpc, "${terraform.env}.private_1a", var.vpc["default.private_1a"])}"
+  availability_zone = "${lookup(var.common, "${terraform.env}.region", var.common["default.region"])}a"
+
+  tags {
+    Name = "${terraform.workspace}-private-1a"
+  }
+}
+
+resource "aws_subnet" "private_1c" {
+  vpc_id            = "${aws_vpc.vpc.id}"
+  cidr_block        = "${lookup(var.vpc, "${terraform.env}.private_1c", var.vpc["default.private_1c"])}"
+  availability_zone = "${lookup(var.common, "${terraform.env}.region", var.common["default.region"])}c"
+
+  tags {
+    Name = "${terraform.workspace}-private-1c"
+  }
+}
+
+resource "aws_subnet" "private_1d" {
+  vpc_id            = "${aws_vpc.vpc.id}"
+  cidr_block        = "${lookup(var.vpc, "${terraform.env}.private_1d", var.vpc["default.private_1d"])}"
+  availability_zone = "${lookup(var.common, "${terraform.env}.region", var.common["default.region"])}d"
+
+  tags {
+    Name = "${terraform.workspace}-private-1d"
+  }
+}
+
 resource "aws_nat_gateway" "nat_1a" {
   allocation_id = "${aws_eip.nat_ip_1a.id}"
   subnet_id     = "${aws_subnet.public_1a.id}"

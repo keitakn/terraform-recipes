@@ -41,3 +41,17 @@ variable "vpc" {
     qa.private_1d      = "10.3.2.128/26"
   }
 }
+
+variable "bastion" {
+  type = "map"
+
+  default = {
+    default.name                        = "bastion"
+    default.image_id                    = "ami-e99f4896"
+    default.instance_type               = "t2.micro"
+    default.key_name                    = ""
+    default.associate_public_ip_address = "true"
+    default.volume_type                 = "gp2"
+    default.volume_size                 = "30"
+  }
+}

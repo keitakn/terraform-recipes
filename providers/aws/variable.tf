@@ -52,9 +52,8 @@ variable "bastion" {
 
   default = {
     default.name                        = "bastion"
-    default.image_id                    = "ami-e99f4896"
+    default.ami                         = "ami-e99f4896"
     default.instance_type               = "t2.micro"
-    default.associate_public_ip_address = "true"
     default.volume_type                 = "gp2"
     default.volume_size                 = "30"
   }

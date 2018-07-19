@@ -20,3 +20,8 @@ variable "workplace_cidr_blocks" {
   type    = "list"
   default = []
 }
+
+variable "ssh_public_key_path" {
+  type    = "string"
+  default = ""
+}

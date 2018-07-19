@@ -42,6 +42,11 @@ variable "vpc" {
   }
 }
 
+variable "ssh_public_key_path" {
+  type    = "string"
+  default = ""
+}
+
 variable "bastion" {
   type = "map"
 
@@ -49,7 +54,6 @@ variable "bastion" {
     default.name                        = "bastion"
     default.image_id                    = "ami-e99f4896"
     default.instance_type               = "t2.micro"
-    default.key_name                    = ""
     default.associate_public_ip_address = "true"
     default.volume_type                 = "gp2"
     default.volume_size                 = "30"

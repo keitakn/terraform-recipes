@@ -5,3 +5,7 @@ output "common" {
 output "vpc" {
   value = "${module.vpc.vpc}"
 }
+
+output "bastion" {
+  value = "${module.compute.bastion}"
+}

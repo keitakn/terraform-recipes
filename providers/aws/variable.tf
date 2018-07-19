@@ -41,3 +41,25 @@ variable "vpc" {
     qa.private_1d      = "10.3.2.128/26"
   }
 }
+
+variable "ssh_public_key_path" {
+  type    = "string"
+  default = ""
+}
+
+variable "bastion" {
+  type = "map"
+
+  default = {
+    default.name                        = "bastion"
+    default.ami                         = "ami-e99f4896"
+    default.instance_type               = "t2.micro"
+    default.volume_type                 = "gp2"
+    default.volume_size                 = "30"
+  }
+}
+
+variable "workplace_cidr_blocks" {
+  type    = "list"
+  default = []
+}

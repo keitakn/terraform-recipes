@@ -12,13 +12,20 @@ TerraformのレシピやTips等を集約したリポジトリ
 `providers/aws/terraform.tfvars` を設置します。
 
 ```
-access_key = "YOUR_ACCESS_KEY"
-secret_key = "YOUR_SECRET_KEY"
+access_key            = "YOUR_ACCESS_KEY"
+secret_key            = "YOUR_SECRET_KEY"
+workplace_cidr_blocks = ["200.200.200.200/32"]
 ```
 
-これは非常に強力な権限を持ったIAMアクセスキーです。
+`access_key`, `secret_key` は非常に強力な権限を持ったIAMアクセスキーです。
 
 よってpublicなGitRepositoryには絶対に公開しないよう注意して下さい。
+
+`workplace_cidr_blocks` にはあなたのオフィスのIPアドレス範囲を入力して下さい。
+
+例えばあなたのオフィスのIPが `200.200.200.200` 固定であれば `200.200.200.200/32` となります。
+
+これはリスト構造なので複数設定する事が可能です。
 
 ### workspaceの設定
 

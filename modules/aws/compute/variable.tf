@@ -15,3 +15,8 @@ variable "vpc" {
 
   default = {}
 }
+
+variable "workplace_cidr_blocks" {
+  type    = "list"
+  default = []
+}

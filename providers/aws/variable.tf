@@ -55,3 +55,8 @@ variable "bastion" {
     default.volume_size                 = "30"
   }
 }
+
+variable "workplace_cidr_blocks" {
+  type    = "list"
+  default = []
+}

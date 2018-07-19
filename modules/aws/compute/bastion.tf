@@ -15,12 +15,11 @@ resource "aws_security_group" "bastion" {
   }
 }
 
-// TODO cidr_blocks は環境変数から取得するように変更する
 resource "aws_security_group_rule" "ssh_from_workplace" {
   security_group_id = "${aws_security_group.bastion.id}"
   type              = "ingress"
   from_port         = "22"
   to_port           = "22"
   protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"]
+  cidr_blocks       = "${var.workplace_cidr_blocks}"
 }

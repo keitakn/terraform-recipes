@@ -11,7 +11,7 @@ output "bastion" {
 output "webapi" {
   value = "${
     map(
-      "security_group_id", "${aws_security_group.webapi.id}"
+      "instance_security_group_id", "${aws_security_group.webapi.id}"
     )
   }"
 }

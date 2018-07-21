@@ -47,6 +47,12 @@ resource "aws_instance" "bastion_1d_1" {
   tags {
     Name = "${terraform.workspace}-${lookup(var.bastion, "${terraform.env}.name", var.bastion["default.name"])}-1d-1"
   }
+
+  lifecycle {
+    ignore_changes = [
+      "*",
+    ]
+  }
 }
 
 resource "aws_eip" "bastion_ip_1d_1" {

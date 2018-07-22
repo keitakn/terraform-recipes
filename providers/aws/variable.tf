@@ -68,6 +68,10 @@ variable "webapi" {
   type = "map"
 
   default = {
-    default.name = "webapi"
+    default.name          = "webapi"
+    default.ami           = "ami-9c9443e3"
+    default.instance_type = "t2.micro"
+    default.volume_type   = "gp2"
+    default.volume_size   = "30"
   }
 }

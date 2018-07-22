@@ -30,24 +30,34 @@ resource "aws_key_pair" "ssh_key_pair" {
 }
 
 resource "aws_instance" "bastion_1d_1" {
-  ami = "${lookup(var.bastion, "${terraform.env}.ami", var.bastion["default.ami"])}"
+  ami                         = "${lookup(var.bastion, "${terraform.env}.ami", var.bastion["default.ami"])}"
   associate_public_ip_address = true
-  instance_type = "${lookup(var.bastion, "${terraform.env}.instance_type", var.bastion["default.instance_type"])}"
+  instance_type               = "${lookup(var.bastion, "${terraform.env}.instance_type", var.bastion["default.instance_type"])}"
+
   ebs_block_device {
     device_name = "/dev/xvda"
     volume_type = "${lookup(var.bastion, "${terraform.env}.volume_type", var.bastion["default.volume_type"])}"
     volume_size = "${lookup(var.bastion, "${terraform.env}.volume_size", var.bastion["default.volume_size"])}"
   }
-  key_name =  "${aws_key_pair.ssh_key_pair.id}"
-  subnet_id = "${var.vpc["subnet_public_1d"]}"
+
+  key_name               = "${aws_key_pair.ssh_key_pair.id}"
+  subnet_id              = "${var.vpc["subnet_public_1d"]}"
   vpc_security_group_ids = ["${aws_security_group.bastion.id}"]
+
   tags {
     Name = "${terraform.workspace}-${lookup(var.bastion, "${terraform.env}.name", var.bastion["default.name"])}-1d-1"
+  }
+
+  lifecycle {
+    ignore_changes = [
+      "*",
+    ]
   }
 }
 
 resource "aws_eip" "bastion_ip_1d_1" {
   instance = "${aws_instance.bastion_1d_1.id}"
+
   tags {
     Name = "${terraform.workspace}-bastion-1d-1"
   }

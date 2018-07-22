@@ -7,3 +7,11 @@ output "bastion" {
     )
   }"
 }
+
+output "webapi" {
+  value = "${
+    map(
+      "instance_security_group_id", "${aws_security_group.webapi.id}"
+    )
+  }"
+}

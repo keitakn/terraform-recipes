@@ -16,6 +16,8 @@ access_key            = "YOUR_ACCESS_KEY"
 secret_key            = "YOUR_SECRET_KEY"
 workplace_cidr_blocks = ["200.200.200.200/32"]
 ssh_public_key_path   = "~/.ssh/your_key_name.pem.pub"
+rds_master_username   = "YOUR_RDS_MASTER_USER_NAME"
+rds_master_password   = "YOUR_RDS_MASTER_USER_PASSWORD"
 ```
 
 `access_key`, `secret_key` は非常に強力な権限を持ったIAMアクセスキーです。
@@ -71,6 +73,12 @@ bastionサーバには `workplace_cidr_blocks` で許可した場所からのみ
 ```
 ssh_public_key_path   = "~/.ssh/your_key_name.pem.pub"
 ```
+
+### RDSのMasterUserとMasterPasswordを設定する
+
+`rds_master_username` と `rds_master_password` を設定して下さい。
+
+`rds_master_password` は十分に強固な値を設定して下さい。
 
 ### workspaceの設定
 

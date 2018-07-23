@@ -13,3 +13,7 @@ output "bastion" {
 output "webapi" {
   value = "${module.compute.webapi}"
 }
+
+output "rds" {
+  value = "${module.rds.rds}"
+}

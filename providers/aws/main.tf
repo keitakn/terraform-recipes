@@ -13,3 +13,10 @@ module "compute" {
   ssh_public_key_path   = "${var.ssh_public_key_path}"
   webapi                = "${var.webapi}"
 }
+
+module "rds" {
+  source = "../../modules/aws/rds"
+  rds    = "${var.rds}"
+  common = "${var.common}"
+  vpc    = "${module.vpc.vpc}"
+}

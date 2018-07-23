@@ -75,3 +75,11 @@ variable "webapi" {
     default.volume_size   = "30"
   }
 }
+
+variable "rds" {
+  type = "map"
+
+  default = {
+    default.name = "database"
+  }
+}

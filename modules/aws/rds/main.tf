@@ -127,3 +127,36 @@ resource "aws_security_group_rule" "mysql_from_private_subnet" {
     "${lookup(var.vpc, "cidr_block_private_1d")}",
   ]
 }
+
+resource "aws_rds_cluster" "rds_cluster" {
+  cluster_identifier              = "${terraform.workspace}-${lookup(var.rds, "${terraform.env}.name", var.rds["default.name"])}-cluster"
+  engine                          = "aurora-mysql"
+  engine_version                  = "5.7.12"
+  master_username                 = "${var.rds_master_username}"
+  master_password                 = "${var.rds_master_password}"
+  backup_retention_period         = 5
+  preferred_backup_window         = "19:30-20:00"
+  preferred_maintenance_window    = "wed:20:15-wed:20:45"
+  port                            = 3306
+  vpc_security_group_ids          = ["${aws_security_group.rds.id}"]
+  db_subnet_group_name            = "${aws_db_subnet_group.rds_subnet.name}"
+  storage_encrypted               = false
+  db_cluster_parameter_group_name = "${aws_rds_cluster_parameter_group.database_cluster_parameter_group.name}"
+}
+
+resource "aws_rds_cluster_instance" "rds_cluster_instance" {
+  count                   = 2
+  engine                  = "aurora-mysql"
+  engine_version          = "5.7.12"
+  identifier              = "${terraform.workspace}-${lookup(var.rds, "${terraform.env}.name", var.rds["default.name"])}-${count.index}"
+  cluster_identifier      = "${aws_rds_cluster.rds_cluster.id}"
+  instance_class          = "db.t2.small"
+  db_subnet_group_name    = "${aws_db_subnet_group.rds_subnet.name}"
+  db_parameter_group_name = "${aws_db_parameter_group.database_parameter_group.name}"
+  monitoring_role_arn     = "${aws_iam_role.rds_monitoring.arn}"
+  monitoring_interval     = 60
+
+  tags {
+    Name = "${terraform.workspace}-${lookup(var.rds, "${terraform.env}.name", var.rds["default.name"])}-${count.index}"
+  }
+}

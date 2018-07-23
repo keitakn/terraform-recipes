@@ -96,3 +96,34 @@ resource "aws_iam_role_policy_attachment" "rds_monitoring" {
   role       = "${aws_iam_role.rds_monitoring.name}"
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonRDSEnhancedMonitoringRole"
 }
+
+resource "aws_security_group" "rds" {
+  name        = "${terraform.workspace}-${lookup(var.rds, "${terraform.env}.name", var.rds["default.name"])}"
+  description = "Security Group to ${lookup(var.rds, "${terraform.env}.name", var.rds["default.name"])}"
+  vpc_id      = "${lookup(var.vpc, "vpc_id")}"
+
+  tags {
+    Name = "${terraform.workspace}-${lookup(var.rds, "${terraform.env}.name", var.rds["default.name"])}"
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_security_group_rule" "mysql_from_private_subnet" {
+  security_group_id = "${aws_security_group.rds.id}"
+  type              = "ingress"
+  from_port         = "3306"
+  to_port           = "3306"
+  protocol          = "tcp"
+
+  cidr_blocks = [
+    "${lookup(var.vpc, "cidr_block_private_1a")}",
+    "${lookup(var.vpc, "cidr_block_private_1c")}",
+    "${lookup(var.vpc, "cidr_block_private_1d")}",
+  ]
+}

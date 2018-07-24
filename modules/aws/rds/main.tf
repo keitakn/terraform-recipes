@@ -176,3 +176,21 @@ resource "aws_route53_zone" "rds_local_domain_name" {
   vpc_id  = "${lookup(var.vpc, "vpc_id")}"
   comment = "${terraform.workspace} RDS Local Domain"
 }
+
+resource "aws_route53_record" "rds_local_master_domain_name" {
+  name    = "${var.rds_local_master_domain_name}"
+  type    = "CNAME"
+  zone_id = "${aws_route53_zone.rds_local_domain_name.zone_id}"
+
+  ttl     = "5"
+  records = ["${aws_rds_cluster.rds_cluster.endpoint}"]
+}
+
+resource "aws_route53_record" "rds_local_slave_domain_name" {
+  name    = "${var.rds_local_slave_domain_name}"
+  type    = "CNAME"
+  zone_id = "${aws_route53_zone.rds_local_domain_name.zone_id}"
+
+  ttl     = "5"
+  records = ["${aws_rds_cluster.rds_cluster.reader_endpoint}"]
+}

@@ -12,12 +12,15 @@ TerraformのレシピやTips等を集約したリポジトリ
 `providers/aws/terraform.tfvars` を設置します。
 
 ```
-access_key            = "YOUR_ACCESS_KEY"
-secret_key            = "YOUR_SECRET_KEY"
-workplace_cidr_blocks = ["200.200.200.200/32"]
-ssh_public_key_path   = "~/.ssh/your_key_name.pem.pub"
-rds_master_username   = "YOUR_RDS_MASTER_USER_NAME"
-rds_master_password   = "YOUR_RDS_MASTER_USER_PASSWORD"
+access_key                   = "YOUR_ACCESS_KEY"
+secret_key                   = "YOUR_SECRET_KEY"
+workplace_cidr_blocks        = ["200.200.200.200/32"]
+ssh_public_key_path          = "~/.ssh/your_key_name.pem.pub"
+rds_master_username          = "YOUR_RDS_MASTER_USER_NAME"
+rds_master_password          = "YOUR_RDS_MASTER_USER_PASSWORD"
+rds_local_domain_base_name   = "terraform-recipes"
+rds_local_master_domain_name = "sample-db-master"
+rds_local_slave_domain_name  = "sample-db-slave"
 ```
 
 `access_key`, `secret_key` は非常に強力な権限を持ったIAMアクセスキーです。
@@ -79,6 +82,42 @@ ssh_public_key_path   = "~/.ssh/your_key_name.pem.pub"
 `rds_master_username` と `rds_master_password` を設定して下さい。
 
 `rds_master_password` は十分に強固な値を設定して下さい。
+
+### RDS用のローカルドメイン名 `rds_local_domain_base_name` を設定する
+
+RDSのAmazon Aurora Clusterは作成の度にClusterエンドポイントを作成します。
+
+アプリケーションから接続する際にこの挙動は少々不便です。
+
+よって本プロジェクトではAmazon Aurora Clusterに接続する為にRoute53でPrivate Hosted Zoneを設定しています。
+
+`rds_local_domain_base_name` にはあなたの好きなドメイン名を入れて下さい。
+
+例えば `terraform-recipes` を入れると以下のようになります。
+
+- terraform-recipes.dev（開発環境）
+- terraform-recipes.stg（ステージング環境）
+- terraform-recipes.prd（本番環境）
+
+### RDSの書き込み用Clusterエンドポイント
+
+`rds_local_master_domain_name` に設定する値です。
+
+例えば `sample-db-master` を設定し、workspaceが `stg` の場合は以下のMySQLコマンドで接続が可能になります。
+
+```
+mysql -h sample-db-master.terraform-recipes.stg -u {rds_master_username} -p
+```
+
+### RDSの読み込み用Clusterエンドポイント
+
+`rds_local_slave_domain_name` に設定する値です。
+
+例えば `sample-db-slave` を設定し、workspaceが `stg` の場合は以下のMySQLコマンドで接続が可能になります。
+
+```
+mysql -h sample-db-slave.terraform-recipes.stg -u {rds_master_username} -p
+```
 
 ### workspaceの設定
 

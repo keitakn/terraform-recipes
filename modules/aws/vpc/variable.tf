@@ -9,3 +9,9 @@ variable "vpc" {
 
   default = {}
 }
+
+variable "rds" {
+  type = "map"
+
+  default = {}
+}

@@ -76,6 +76,10 @@ resource "aws_rds_cluster_parameter_group" "database_cluster_parameter_group" {
     name  = "time_zone"
     value = "Asia/Tokyo"
   }
+
+  lifecycle {
+    ignore_changes = ["*"]
+  }
 }
 
 resource "aws_iam_role" "rds_monitoring" {
@@ -165,4 +169,28 @@ resource "aws_rds_cluster_instance" "rds_cluster_instance" {
   tags {
     Name = "${terraform.workspace}-${lookup(var.rds, "${terraform.env}.name", var.rds["default.name"])}-${count.index}"
   }
+}
+
+resource "aws_route53_zone" "rds_local_domain_name" {
+  name    = "${var.rds_local_domain_base_name}.${terraform.workspace}"
+  vpc_id  = "${lookup(var.vpc, "vpc_id")}"
+  comment = "${terraform.workspace} RDS Local Domain"
+}
+
+resource "aws_route53_record" "rds_local_master_domain_name" {
+  name    = "${var.rds_local_master_domain_name}"
+  type    = "CNAME"
+  zone_id = "${aws_route53_zone.rds_local_domain_name.zone_id}"
+
+  ttl     = "5"
+  records = ["${aws_rds_cluster.rds_cluster.endpoint}"]
+}
+
+resource "aws_route53_record" "rds_local_slave_domain_name" {
+  name    = "${var.rds_local_slave_domain_name}"
+  type    = "CNAME"
+  zone_id = "${aws_route53_zone.rds_local_domain_name.zone_id}"
+
+  ttl     = "5"
+  records = ["${aws_rds_cluster.rds_cluster.reader_endpoint}"]
 }

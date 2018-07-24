@@ -202,3 +202,12 @@ resource "aws_route_table_association" "private_1d" {
   route_table_id = "${aws_route_table.private_1d.id}"
   subnet_id      = "${aws_subnet.private_1d.id}"
 }
+
+resource "aws_vpc_dhcp_options" "dhcp_options" {
+  domain_name         = "${lookup(var.common, "${terraform.env}.region", var.common["default.region"])}.compute.internal ${lookup(var.rds, "rds_local_domain_name")}"
+  domain_name_servers = ["AmazonProvidedDNS"]
+
+  tags {
+    Name = "${terraform.workspace}"
+  }
+}

@@ -15,10 +15,11 @@ module "compute" {
 }
 
 module "rds" {
-  source              = "../../modules/aws/rds"
-  rds                 = "${var.rds}"
-  common              = "${var.common}"
-  vpc                 = "${module.vpc.vpc}"
-  rds_master_username = "${var.rds_master_username}"
-  rds_master_password = "${var.rds_master_password}"
+  source                     = "../../modules/aws/rds"
+  rds                        = "${var.rds}"
+  common                     = "${var.common}"
+  vpc                        = "${module.vpc.vpc}"
+  rds_master_username        = "${var.rds_master_username}"
+  rds_master_password        = "${var.rds_master_password}"
+  rds_local_domain_base_name = "${var.rds_local_domain_base_name}"
 }

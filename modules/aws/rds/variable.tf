@@ -25,3 +25,8 @@ variable "rds_master_password" {
   type    = "string"
   default = ""
 }
+
+variable "rds_local_domain_base_name" {
+  type    = "string"
+  default = ""
+}

@@ -67,6 +67,12 @@ resource "aws_rds_cluster_parameter_group" "database_cluster_parameter_group" {
   }
 
   parameter {
+    name         = "character-set-client-handshake"
+    value        = "1"
+    apply_method = "pending-reboot"
+  }
+
+  parameter {
     name  = "time_zone"
     value = "Asia/Tokyo"
   }

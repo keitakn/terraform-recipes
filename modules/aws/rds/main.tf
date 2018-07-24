@@ -76,6 +76,10 @@ resource "aws_rds_cluster_parameter_group" "database_cluster_parameter_group" {
     name  = "time_zone"
     value = "Asia/Tokyo"
   }
+
+  lifecycle {
+    ignore_changes = ["*"]
+  }
 }
 
 resource "aws_iam_role" "rds_monitoring" {

@@ -166,3 +166,9 @@ resource "aws_rds_cluster_instance" "rds_cluster_instance" {
     Name = "${terraform.workspace}-${lookup(var.rds, "${terraform.env}.name", var.rds["default.name"])}-${count.index}"
   }
 }
+
+resource "aws_route53_zone" "rds_local_domain_name" {
+  name    = "smsc-nsc.${terraform.workspace}"
+  vpc_id  = "${lookup(var.vpc, "vpc_id")}"
+  comment = "${terraform.workspace} RDS Local Domain"
+}

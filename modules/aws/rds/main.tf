@@ -67,6 +67,12 @@ resource "aws_rds_cluster_parameter_group" "database_cluster_parameter_group" {
   }
 
   parameter {
+    name         = "character-set-client-handshake"
+    value        = "1"
+    apply_method = "pending-reboot"
+  }
+
+  parameter {
     name  = "time_zone"
     value = "Asia/Tokyo"
   }
@@ -130,8 +136,8 @@ resource "aws_security_group_rule" "mysql_from_private_subnet" {
 
 resource "aws_rds_cluster" "rds_cluster" {
   cluster_identifier              = "${terraform.workspace}-${lookup(var.rds, "${terraform.env}.name", var.rds["default.name"])}-cluster"
-  engine                          = "aurora-mysql"
-  engine_version                  = "5.7.12"
+  engine                          = "${lookup(var.rds, "${terraform.env}.engine", var.rds["default.engine"])}"
+  engine_version                  = "${lookup(var.rds, "${terraform.env}.engine_version", var.rds["default.engine_version"])}"
   master_username                 = "${var.rds_master_username}"
   master_password                 = "${var.rds_master_password}"
   backup_retention_period         = 5
@@ -145,12 +151,12 @@ resource "aws_rds_cluster" "rds_cluster" {
 }
 
 resource "aws_rds_cluster_instance" "rds_cluster_instance" {
-  count                   = 2
-  engine                  = "aurora-mysql"
-  engine_version          = "5.7.12"
+  count                   = "${lookup(var.rds, "${terraform.env}.instance_count", var.rds["default.instance_count"])}"
+  engine                  = "${lookup(var.rds, "${terraform.env}.engine", var.rds["default.engine"])}"
+  engine_version          = "${lookup(var.rds, "${terraform.env}.engine_version", var.rds["default.engine_version"])}"
   identifier              = "${terraform.workspace}-${lookup(var.rds, "${terraform.env}.name", var.rds["default.name"])}-${count.index}"
   cluster_identifier      = "${aws_rds_cluster.rds_cluster.id}"
-  instance_class          = "db.t2.small"
+  instance_class          = "${lookup(var.rds, "${terraform.env}.instance_class", var.rds["default.instance_class"])}"
   db_subnet_group_name    = "${aws_db_subnet_group.rds_subnet.name}"
   db_parameter_group_name = "${aws_db_parameter_group.database_parameter_group.name}"
   monitoring_role_arn     = "${aws_iam_role.rds_monitoring.arn}"

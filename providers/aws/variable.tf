@@ -80,7 +80,17 @@ variable "rds" {
   type = "map"
 
   default = {
-    default.name = "database"
+    default.name           = "database"
+    default.engine         = "aurora-mysql"
+    default.engine_version = "5.7.12"
+    default.instance_class = "db.r4.large"
+    stg.instance_class     = "db.t2.small"
+    dev.instance_class     = "db.t2.small"
+    qa.instance_class      = "db.t2.small"
+    default.instance_count = 3
+    stg.instance_count     = 2
+    dev.instance_count     = 1
+    qa.instance_count      = 3
   }
 }
 

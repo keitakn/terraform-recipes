@@ -86,7 +86,7 @@ variable "rds" {
     default.instance_class = "db.r4.large"
     stg.instance_class     = "db.t2.small"
     dev.instance_class     = "db.t2.small"
-    qa.instance_class      = "db.t2.small"
+    qa.instance_class      = "db.r4.large"
     default.instance_count = 3
     stg.instance_count     = 2
     dev.instance_count     = 1

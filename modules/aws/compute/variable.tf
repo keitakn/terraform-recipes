@@ -10,6 +10,12 @@ variable "bastion" {
   default = {}
 }
 
+variable "builder" {
+  type = "map"
+
+  default = {}
+}
+
 variable "vpc" {
   type = "map"
 

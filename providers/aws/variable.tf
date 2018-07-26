@@ -64,6 +64,18 @@ variable "workplace_cidr_blocks" {
   default = []
 }
 
+variable "builder" {
+  type = "map"
+
+  default = {
+    default.name          = "builder"
+    default.ami           = "ami-9c9443e3"
+    default.instance_type = "t2.micro"
+    default.volume_type   = "gp2"
+    default.volume_size   = "30"
+  }
+}
+
 variable "webapi" {
   type = "map"
 

@@ -9,6 +9,7 @@ module "compute" {
   source                = "../../modules/aws/compute"
   common                = "${var.common}"
   vpc                   = "${module.vpc.vpc}"
+  iam                   = "${module.iam.iam}"
   bastion               = "${var.bastion}"
   builder               = "${var.builder}"
   workplace_cidr_blocks = "${var.workplace_cidr_blocks}"
@@ -26,4 +27,8 @@ module "rds" {
   rds_local_domain_base_name   = "${var.rds_local_domain_base_name}"
   rds_local_master_domain_name = "${var.rds_local_master_domain_name}"
   rds_local_slave_domain_name  = "${var.rds_local_slave_domain_name}"
+}
+
+module "iam" {
+  source = "../../modules/aws/iam"
 }

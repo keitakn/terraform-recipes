@@ -32,6 +32,12 @@ variable "ssh_public_key_path" {
   default = ""
 }
 
+variable "iam" {
+  type = "map"
+
+  default = {}
+}
+
 variable "webapi" {
   type = "map"
 

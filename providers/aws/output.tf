@@ -17,3 +17,7 @@ output "webapi" {
 output "rds" {
   value = "${module.rds.rds}"
 }
+
+output "iam" {
+  value = "${module.iam.iam}"
+}

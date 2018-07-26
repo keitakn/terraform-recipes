@@ -152,6 +152,7 @@ resource "aws_rds_cluster" "rds_cluster" {
   db_subnet_group_name            = "${aws_db_subnet_group.rds_subnet.name}"
   storage_encrypted               = false
   db_cluster_parameter_group_name = "${aws_rds_cluster_parameter_group.database_cluster_parameter_group.name}"
+  skip_final_snapshot             = true
 }
 
 resource "aws_rds_cluster_instance" "rds_cluster_instance" {

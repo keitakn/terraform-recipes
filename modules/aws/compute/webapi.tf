@@ -81,3 +81,19 @@ resource "aws_instance" "webapi" {
     ]
   }
 }
+
+resource "aws_alb" "webapi_alb" {
+  name            = "${terraform.workspace}-${lookup(var.webapi, "${terraform.env}.name", var.webapi["default.name"])}-alb"
+  internal        = false
+  security_groups = ["${aws_security_group.webapi_alb.id}"]
+
+  subnets = [
+    "${var.vpc["subnet_public_1a"]}",
+    "${var.vpc["subnet_public_1c"]}",
+    "${var.vpc["subnet_public_1d"]}",
+  ]
+
+  tags {
+    Name = "${terraform.workspace}-${lookup(var.webapi, "${terraform.env}.name", var.webapi["default.name"])}-alb"
+  }
+}

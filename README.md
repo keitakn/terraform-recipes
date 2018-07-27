@@ -119,6 +119,10 @@ mysql -h sample-db-master.terraform-recipes.stg -u {rds_master_username} -p
 mysql -h sample-db-slave.terraform-recipes.stg -u {rds_master_username} -p
 ```
 
+### `webapi` の `ami` を変更する
+
+`providers/aws/variable.tf` の中にある `variable.webapi` に設定されているamiをあなたが利用する物に変更して下さい。
+
 ### workspaceの設定
 
 `workspace` によって実行環境を切り替えます。

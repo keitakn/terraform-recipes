@@ -82,6 +82,28 @@ resource "aws_instance" "webapi" {
   }
 }
 
+resource "aws_launch_configuration" "webapi" {
+  name_prefix                 = "${terraform.workspace}-${lookup(var.webapi, "${terraform.env}.name", var.webapi["default.name"])}-"
+  image_id                    = "${lookup(var.webapi, "${terraform.env}.ami", var.webapi["default.ami"])}"
+  instance_type               = "${lookup(var.webapi, "${terraform.env}.instance_type", var.webapi["default.instance_type"])}"
+  key_name                    = "${aws_key_pair.ssh_key_pair.id}"
+  associate_public_ip_address = false
+
+  root_block_device {
+    volume_type = "${lookup(var.webapi, "${terraform.env}.volume_type", var.webapi["default.volume_type"])}"
+    volume_size = "${lookup(var.webapi, "${terraform.env}.volume_size", var.webapi["default.volume_size"])}"
+  }
+
+  iam_instance_profile = "${lookup(var.iam, "webserver_instance_profile_name")}"
+  security_groups      = ["${aws_security_group.webapi.id}"]
+
+  enable_monitoring = true
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
 resource "aws_alb" "webapi_alb" {
   name            = "${terraform.workspace}-${lookup(var.webapi, "${terraform.env}.name", var.webapi["default.name"])}-alb"
   internal        = false

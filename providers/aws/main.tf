@@ -9,11 +9,15 @@ module "compute" {
   source                = "../../modules/aws/compute"
   common                = "${var.common}"
   vpc                   = "${module.vpc.vpc}"
+  iam                   = "${module.iam.iam}"
+  acm                   = "${module.acm.acm}"
   bastion               = "${var.bastion}"
   builder               = "${var.builder}"
   workplace_cidr_blocks = "${var.workplace_cidr_blocks}"
   ssh_public_key_path   = "${var.ssh_public_key_path}"
   webapi                = "${var.webapi}"
+  webapi_domain_name    = "${var.webapi_domain_name}"
+  main_domain_name      = "${var.main_domain_name}"
 }
 
 module "rds" {
@@ -26,4 +30,13 @@ module "rds" {
   rds_local_domain_base_name   = "${var.rds_local_domain_base_name}"
   rds_local_master_domain_name = "${var.rds_local_master_domain_name}"
   rds_local_slave_domain_name  = "${var.rds_local_slave_domain_name}"
+}
+
+module "iam" {
+  source = "../../modules/aws/iam"
+}
+
+module "acm" {
+  source           = "../../modules/aws/acm"
+  main_domain_name = "${var.main_domain_name}"
 }

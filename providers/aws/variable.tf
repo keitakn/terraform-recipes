@@ -85,6 +85,8 @@ variable "webapi" {
     default.instance_type = "t2.micro"
     default.volume_type   = "gp2"
     default.volume_size   = "30"
+    stg.ami               = "ami-0643c79563983be55"
+    stg.instance_type     = "t2.micro"
   }
 }
 
@@ -128,5 +130,17 @@ variable "rds_local_master_domain_name" {
 
 variable "rds_local_slave_domain_name" {
   type    = "string"
+  default = ""
+}
+
+variable "main_domain_name" {
+  type = "string"
+
+  default = ""
+}
+
+variable "webapi_domain_name" {
+  type = "string"
+
   default = ""
 }

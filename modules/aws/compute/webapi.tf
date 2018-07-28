@@ -186,7 +186,7 @@ data "aws_route53_zone" "webapi" {
 }
 
 resource "aws_route53_record" "webapi" {
-  name    = "${var.webapi_domain_name}"
+  name    = "${terraform.workspace}-${var.webapi_domain_name}"
   type    = "A"
   zone_id = "${data.aws_route53_zone.webapi.zone_id}"
 

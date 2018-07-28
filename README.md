@@ -137,7 +137,7 @@ WebAPIを模倣したサービスはHTTPSで通信を行うので、AWS Certific
 
 ### `webapi_domain_name` にWebAPIのドメイン名を指定
 
-例えば `api.sample.com` を設定すると以下のようになります。
+例えば `api` を設定すると以下のようになります。
 
 - `dev-api.sample.com`（開発環境）
 - `stg-api.sample.com`（ステージング環境）

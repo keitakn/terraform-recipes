@@ -132,3 +132,9 @@ variable "rds_local_slave_domain_name" {
   type    = "string"
   default = ""
 }
+
+variable "main_domain_name" {
+  type = "string"
+
+  default = ""
+}

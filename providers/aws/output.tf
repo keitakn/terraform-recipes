@@ -21,3 +21,7 @@ output "rds" {
 output "iam" {
   value = "${module.iam.iam}"
 }
+
+output "acm" {
+  value = "${module.acm.acm}"
+}

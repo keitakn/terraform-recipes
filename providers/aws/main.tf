@@ -32,3 +32,8 @@ module "rds" {
 module "iam" {
   source = "../../modules/aws/iam"
 }
+
+module "acm" {
+  source           = "../../modules/aws/acm"
+  main_domain_name = "${var.main_domain_name}"
+}

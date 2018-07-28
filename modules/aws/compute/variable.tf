@@ -38,6 +38,12 @@ variable "iam" {
   default = {}
 }
 
+variable "acm" {
+  type = "map"
+
+  default = {}
+}
+
 variable "webapi" {
   type = "map"
 

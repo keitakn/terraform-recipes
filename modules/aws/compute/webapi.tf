@@ -136,6 +136,19 @@ resource "aws_alb_target_group" "webapi_target_group" {
   }
 }
 
+resource "aws_alb_listener" "webapi_listener" {
+  "default_action" {
+    target_group_arn = "${aws_alb_target_group.webapi_target_group.arn}"
+    type             = "forward"
+  }
+
+  load_balancer_arn = "${aws_alb.webapi_alb.arn}"
+  port              = 443
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-2016-08"
+  certificate_arn   = "${lookup(var.acm, "main_arn")}"
+}
+
 resource "aws_autoscaling_group" "webapi_autoscaling_group" {
   vpc_zone_identifier = [
     "${var.vpc["subnet_private_1a"]}",

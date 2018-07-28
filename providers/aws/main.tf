@@ -10,6 +10,7 @@ module "compute" {
   common                = "${var.common}"
   vpc                   = "${module.vpc.vpc}"
   iam                   = "${module.iam.iam}"
+  acm                   = "${module.acm.acm}"
   bastion               = "${var.bastion}"
   builder               = "${var.builder}"
   workplace_cidr_blocks = "${var.workplace_cidr_blocks}"

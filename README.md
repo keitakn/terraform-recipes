@@ -21,6 +21,8 @@ rds_master_password          = "YOUR_RDS_MASTER_USER_PASSWORD"
 rds_local_domain_base_name   = "terraform-recipes"
 rds_local_master_domain_name = "sample-db-master"
 rds_local_slave_domain_name  = "sample-db-slave"
+main_domain_name             = "sample.com"
+webapi_domain_name           = "api.sample.com"
 ```
 
 `access_key`, `secret_key` は非常に強力な権限を持ったIAMアクセスキーです。
@@ -122,6 +124,25 @@ mysql -h sample-db-slave.terraform-recipes.stg -u {rds_master_username} -p
 ### `webapi` の `ami` を変更する
 
 `providers/aws/variable.tf` の中にある `variable.webapi` に設定されているamiをあなたが利用する物に変更して下さい。
+
+### `main_domain_name` にメインとなるドメイン名を指定
+
+Hosted Zoneにメインとなるドメイン名を設定してください。
+
+WebAPIを模倣したサービスはHTTPSで通信を行うので、AWS Certificate Managerで証明書を追加してください。
+
+証明書は *.{main_domain_name} で取得してください。
+
+メインのドメイン名が `sample.com` であれば `*.sample.com` で証明書を取得してください。
+
+### `webapi_domain_name` にWebAPIのドメイン名を指定
+
+例えば `api.sample.com` を設定すると以下のようになります。
+
+- `dev-api.sample.com`（開発環境）
+- `stg-api.sample.com`（ステージング環境）
+- `qa-api.sample.com`（QA環境）
+- `prd-api.sample.com`（本番環境）
 
 ### workspaceの設定
 

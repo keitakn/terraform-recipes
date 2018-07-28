@@ -138,3 +138,9 @@ variable "main_domain_name" {
 
   default = ""
 }
+
+variable "webapi_domain_name" {
+  type = "string"
+
+  default = ""
+}

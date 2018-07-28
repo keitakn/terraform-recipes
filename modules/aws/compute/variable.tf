@@ -49,3 +49,15 @@ variable "webapi" {
 
   default = {}
 }
+
+variable "main_domain_name" {
+  type = "string"
+
+  default = ""
+}
+
+variable "webapi_domain_name" {
+  type = "string"
+
+  default = ""
+}

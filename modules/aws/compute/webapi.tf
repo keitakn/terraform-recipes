@@ -180,3 +180,19 @@ resource "aws_alb_target_group_attachment" "webapi_alb_attachment" {
   target_group_arn = "${aws_alb_target_group.webapi_target_group.arn}"
   target_id        = "${aws_instance.webapi.id}"
 }
+
+data "aws_route53_zone" "webapi" {
+  name = "${var.main_domain_name}"
+}
+
+resource "aws_route53_record" "webapi" {
+  name    = "${var.webapi_domain_name}"
+  type    = "A"
+  zone_id = "${data.aws_route53_zone.webapi.zone_id}"
+
+  alias {
+    evaluate_target_health = false
+    name                   = "${aws_alb.webapi_alb.dns_name}"
+    zone_id                = "${aws_alb.webapi_alb.zone_id}"
+  }
+}

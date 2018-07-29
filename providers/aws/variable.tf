@@ -76,6 +76,20 @@ variable "builder" {
   }
 }
 
+variable "web" {
+  type = "map"
+
+  default = {
+    default.name          = "web"
+    default.ami           = "ami-9c9443e3"
+    default.instance_type = "t2.micro"
+    default.volume_type   = "gp2"
+    default.volume_size   = "30"
+    stg.ami               = "ami-9c9443e3"
+    stg.instance_type     = "t2.micro"
+  }
+}
+
 variable "webapi" {
   type = "map"
 

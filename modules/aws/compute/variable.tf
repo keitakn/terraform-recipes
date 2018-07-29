@@ -44,6 +44,12 @@ variable "acm" {
   default = {}
 }
 
+variable "web" {
+  type = "map"
+
+  default = {}
+}
+
 variable "webapi" {
   type = "map"
 

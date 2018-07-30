@@ -22,8 +22,8 @@ rds_local_domain_base_name   = "terraform-recipes"
 rds_local_master_domain_name = "sample-db-master"
 rds_local_slave_domain_name  = "sample-db-slave"
 main_domain_name             = "sample.com"
-web_domain_name              = "api.sample.com"
-webapi_domain_name           = "api.sample.com"
+web_domain_name              = "www"
+webapi_domain_name           = "api"
 ```
 
 `access_key`, `secret_key` は非常に強力な権限を持ったIAMアクセスキーです。

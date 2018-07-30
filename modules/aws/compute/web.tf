@@ -152,3 +152,57 @@ resource "aws_alb_listener" "web_listener" {
   ssl_policy        = "ELBSecurityPolicy-2016-08"
   certificate_arn   = "${lookup(var.acm, "main_arn")}"
 }
+
+resource "aws_alb_target_group_attachment" "web_alb_attachment" {
+  target_group_arn = "${aws_alb_target_group.web_target_group.arn}"
+  target_id        = "${aws_instance.web.id}"
+}
+
+resource "aws_launch_configuration" "web" {
+  name_prefix                 = "${terraform.workspace}-${lookup(var.web, "${terraform.env}.name", var.web["default.name"])}-"
+  image_id                    = "${lookup(var.web, "${terraform.env}.ami", var.web["default.ami"])}"
+  instance_type               = "${lookup(var.web, "${terraform.env}.instance_type", var.web["default.instance_type"])}"
+  key_name                    = "${aws_key_pair.ssh_key_pair.id}"
+  associate_public_ip_address = false
+
+  root_block_device {
+    volume_type = "${lookup(var.web, "${terraform.env}.volume_type", var.web["default.volume_type"])}"
+    volume_size = "${lookup(var.web, "${terraform.env}.volume_size", var.web["default.volume_size"])}"
+  }
+
+  iam_instance_profile = "${lookup(var.iam, "webserver_instance_profile_name")}"
+  security_groups      = ["${aws_security_group.web.id}"]
+
+  enable_monitoring = true
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_autoscaling_group" "web_autoscaling_group" {
+  vpc_zone_identifier = [
+    "${var.vpc["subnet_private_1a"]}",
+    "${var.vpc["subnet_private_1c"]}",
+    "${var.vpc["subnet_private_1d"]}",
+  ]
+
+  name                      = "${terraform.workspace}-${lookup(var.web, "${terraform.env}.name", var.web["default.name"])}"
+  max_size                  = 2
+  min_size                  = 1
+  health_check_grace_period = 300
+  desired_capacity          = 1
+  health_check_type         = "EC2"
+  force_delete              = true
+  launch_configuration      = "${aws_launch_configuration.web.name}"
+
+  tag {
+    key                 = "Name"
+    value               = "${terraform.workspace}-${lookup(var.web, "${terraform.env}.name", var.web["default.name"])}"
+    propagate_at_launch = true
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}

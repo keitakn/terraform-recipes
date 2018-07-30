@@ -44,6 +44,12 @@ variable "acm" {
   default = {}
 }
 
+variable "web" {
+  type = "map"
+
+  default = {}
+}
+
 variable "webapi" {
   type = "map"
 
@@ -51,6 +57,12 @@ variable "webapi" {
 }
 
 variable "main_domain_name" {
+  type = "string"
+
+  default = ""
+}
+
+variable "web_domain_name" {
   type = "string"
 
   default = ""

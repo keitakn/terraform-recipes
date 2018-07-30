@@ -76,6 +76,20 @@ variable "builder" {
   }
 }
 
+variable "web" {
+  type = "map"
+
+  default = {
+    default.name          = "web"
+    default.ami           = "ami-9c9443e3"
+    default.instance_type = "t2.micro"
+    default.volume_type   = "gp2"
+    default.volume_size   = "30"
+    stg.ami               = "ami-02c0116b3d7c49b9b"
+    stg.instance_type     = "t2.micro"
+  }
+}
+
 variable "webapi" {
   type = "map"
 
@@ -134,6 +148,12 @@ variable "rds_local_slave_domain_name" {
 }
 
 variable "main_domain_name" {
+  type = "string"
+
+  default = ""
+}
+
+variable "web_domain_name" {
   type = "string"
 
   default = ""

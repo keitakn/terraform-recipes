@@ -22,6 +22,7 @@ rds_local_domain_base_name   = "terraform-recipes"
 rds_local_master_domain_name = "sample-db-master"
 rds_local_slave_domain_name  = "sample-db-slave"
 main_domain_name             = "sample.com"
+web_domain_name              = "api.sample.com"
 webapi_domain_name           = "api.sample.com"
 ```
 
@@ -134,6 +135,15 @@ WebAPIを模倣したサービスはHTTPSで通信を行うので、AWS Certific
 証明書は *.{main_domain_name} で取得してください。
 
 メインのドメイン名が `sample.com` であれば `*.sample.com` で証明書を取得してください。
+
+### `web_domain_name` にWebフロントエンドのドメイン名を指定
+
+例えば `www` を設定すると以下のようになります。
+
+- `dev-www.sample.com`（開発環境）
+- `stg-www.sample.com`（ステージング環境）
+- `qa-www.sample.com`（QA環境）
+- `prd-www.sample.com`（本番環境）
 
 ### `webapi_domain_name` にWebAPIのドメイン名を指定
 

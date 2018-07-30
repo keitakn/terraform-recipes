@@ -206,3 +206,19 @@ resource "aws_autoscaling_group" "web_autoscaling_group" {
     create_before_destroy = true
   }
 }
+
+data "aws_route53_zone" "web" {
+  name = "${var.main_domain_name}"
+}
+
+resource "aws_route53_record" "web" {
+  name    = "${terraform.workspace}-${var.web_domain_name}"
+  type    = "A"
+  zone_id = "${data.aws_route53_zone.web.zone_id}"
+
+  alias {
+    evaluate_target_health = false
+    name                   = "${aws_alb.web_alb.dns_name}"
+    zone_id                = "${aws_alb.web_alb.zone_id}"
+  }
+}

@@ -17,6 +17,7 @@ module "compute" {
   ssh_public_key_path   = "${var.ssh_public_key_path}"
   web                   = "${var.web}"
   webapi                = "${var.webapi}"
+  web_domain_name       = "${var.web_domain_name}"
   webapi_domain_name    = "${var.webapi_domain_name}"
   main_domain_name      = "${var.main_domain_name}"
 }

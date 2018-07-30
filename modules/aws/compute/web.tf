@@ -80,3 +80,75 @@ resource "aws_security_group_rule" "web_alb_allow_https_from_nat" {
     "${lookup(var.vpc, "nat_ip_1d")}/32",
   ]
 }
+
+resource "aws_instance" "web" {
+  ami                         = "${lookup(var.web, "${terraform.env}.ami", var.web["default.ami"])}"
+  associate_public_ip_address = false
+  instance_type               = "${lookup(var.web, "${terraform.env}.instance_type", var.web["default.instance_type"])}"
+
+  ebs_block_device {
+    device_name = "/dev/xvda"
+    volume_type = "${lookup(var.web, "${terraform.env}.volume_type", var.web["default.volume_type"])}"
+    volume_size = "${lookup(var.web, "${terraform.env}.volume_size", var.web["default.volume_size"])}"
+  }
+
+  key_name               = "${aws_key_pair.ssh_key_pair.id}"
+  subnet_id              = "${var.vpc["subnet_private_1d"]}"
+  vpc_security_group_ids = ["${aws_security_group.web.id}"]
+
+  tags {
+    Name = "${terraform.workspace}-${lookup(var.web, "${terraform.env}.name", var.web["default.name"])}-1d-1"
+  }
+
+  lifecycle {
+    ignore_changes = [
+      "*",
+    ]
+  }
+}
+
+resource "aws_alb" "web_alb" {
+  name            = "${terraform.workspace}-${lookup(var.web, "${terraform.env}.name", var.web["default.name"])}-alb"
+  internal        = false
+  security_groups = ["${aws_security_group.web_alb.id}"]
+
+  subnets = [
+    "${var.vpc["subnet_public_1a"]}",
+    "${var.vpc["subnet_public_1c"]}",
+    "${var.vpc["subnet_public_1d"]}",
+  ]
+
+  tags {
+    Name = "${terraform.workspace}-${lookup(var.web, "${terraform.env}.name", var.web["default.name"])}-alb"
+  }
+}
+
+resource "aws_alb_target_group" "web_target_group" {
+  name     = "${terraform.workspace}-${lookup(var.web, "${terraform.env}.name", var.web["default.name"])}"
+  port     = 80
+  protocol = "HTTP"
+  vpc_id   = "${lookup(var.vpc, "vpc_id")}"
+
+  health_check {
+    interval            = 30
+    path                = "/health-checks"
+    port                = 80
+    protocol            = "HTTP"
+    timeout             = 5
+    unhealthy_threshold = 2
+    matcher             = 200
+  }
+}
+
+resource "aws_alb_listener" "web_listener" {
+  "default_action" {
+    target_group_arn = "${aws_alb_target_group.web_target_group.arn}"
+    type             = "forward"
+  }
+
+  load_balancer_arn = "${aws_alb.web_alb.arn}"
+  port              = 443
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-2016-08"
+  certificate_arn   = "${lookup(var.acm, "main_arn")}"
+}

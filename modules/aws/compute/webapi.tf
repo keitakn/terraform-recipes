@@ -103,13 +103,13 @@ resource "aws_launch_configuration" "webapi" {
 
 resource "aws_s3_bucket" "webapi_logs" {
   bucket        = "${terraform.workspace}-${lookup(var.common, "${terraform.env}.project", var.common["default.project"])}-webapi-alb-logs"
-  policy        = "${data.aws_iam_policy_document.put_alb_logs.json}"
+  policy        = "${data.aws_iam_policy_document.put_webapi_alb_logs.json}"
   force_destroy = true
 }
 
 data "aws_elb_service_account" "alb_log" {}
 
-data "aws_iam_policy_document" "put_alb_logs" {
+data "aws_iam_policy_document" "put_webapi_alb_logs" {
   "statement" {
     actions = ["s3:PutObject"]
 

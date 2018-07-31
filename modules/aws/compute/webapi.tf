@@ -107,14 +107,12 @@ resource "aws_s3_bucket" "webapi_logs" {
   force_destroy = true
 }
 
-data "aws_elb_service_account" "alb_log" {}
-
 data "aws_iam_policy_document" "put_webapi_alb_logs" {
   "statement" {
     actions = ["s3:PutObject"]
 
     principals {
-      identifiers = ["${data.aws_elb_service_account.alb_log.id}"]
+      identifiers = ["${data.aws_elb_service_account.aws_elb_service_account.id}"]
       type        = "AWS"
     }
 

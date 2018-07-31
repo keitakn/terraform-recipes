@@ -107,6 +107,27 @@ resource "aws_instance" "web" {
   }
 }
 
+resource "aws_s3_bucket" "web_alb_logs" {
+  bucket        = "${terraform.workspace}-${lookup(var.common, "${terraform.env}.project", var.common["default.project"])}-web-alb-logs"
+  policy        = "${data.aws_iam_policy_document.put_web_alb_logs.json}"
+  force_destroy = true
+}
+
+data "aws_iam_policy_document" "put_web_alb_logs" {
+  "statement" {
+    actions = ["s3:PutObject"]
+
+    principals {
+      identifiers = ["${data.aws_elb_service_account.aws_elb_service_account.id}"]
+      type        = "AWS"
+    }
+
+    resources = [
+      "arn:aws:s3:::${terraform.workspace}-${lookup(var.common, "${terraform.env}.project", var.common["default.project"])}-web-alb-logs/*",
+    ]
+  }
+}
+
 resource "aws_alb" "web_alb" {
   name            = "${terraform.workspace}-${lookup(var.web, "${terraform.env}.name", var.web["default.name"])}-alb"
   internal        = false
@@ -117,6 +138,10 @@ resource "aws_alb" "web_alb" {
     "${var.vpc["subnet_public_1c"]}",
     "${var.vpc["subnet_public_1d"]}",
   ]
+
+  access_logs {
+    bucket = "${aws_s3_bucket.web_alb_logs.bucket}"
+  }
 
   tags {
     Name = "${terraform.workspace}-${lookup(var.web, "${terraform.env}.name", var.web["default.name"])}-alb"

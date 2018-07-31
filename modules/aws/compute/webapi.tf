@@ -79,25 +79,24 @@ resource "aws_instance" "webapi" {
   }
 }
 
-resource "aws_launch_configuration" "webapi" {
-  name_prefix                 = "${terraform.workspace}-${lookup(var.webapi, "${terraform.env}.name", var.webapi["default.name"])}-"
-  image_id                    = "${lookup(var.webapi, "${terraform.env}.ami", var.webapi["default.ami"])}"
-  instance_type               = "${lookup(var.webapi, "${terraform.env}.instance_type", var.webapi["default.instance_type"])}"
-  key_name                    = "${aws_key_pair.ssh_key_pair.id}"
-  associate_public_ip_address = false
+resource "aws_s3_bucket" "webapi_logs" {
+  bucket        = "${terraform.workspace}-${lookup(var.common, "${terraform.env}.project", var.common["default.project"])}-webapi-alb-logs"
+  policy        = "${data.aws_iam_policy_document.put_webapi_alb_logs.json}"
+  force_destroy = true
+}
 
-  root_block_device {
-    volume_type = "${lookup(var.webapi, "${terraform.env}.volume_type", var.webapi["default.volume_type"])}"
-    volume_size = "${lookup(var.webapi, "${terraform.env}.volume_size", var.webapi["default.volume_size"])}"
-  }
+data "aws_iam_policy_document" "put_webapi_alb_logs" {
+  "statement" {
+    actions = ["s3:PutObject"]
 
-  iam_instance_profile = "${lookup(var.iam, "webserver_instance_profile_name")}"
-  security_groups      = ["${aws_security_group.webapi.id}"]
+    principals {
+      identifiers = ["${data.aws_elb_service_account.aws_elb_service_account.id}"]
+      type        = "AWS"
+    }
 
-  enable_monitoring = true
-
-  lifecycle {
-    create_before_destroy = true
+    resources = [
+      "arn:aws:s3:::${terraform.workspace}-${lookup(var.common, "${terraform.env}.project", var.common["default.project"])}-webapi-alb-logs/*",
+    ]
   }
 }
 
@@ -111,6 +110,11 @@ resource "aws_alb" "webapi_alb" {
     "${var.vpc["subnet_public_1c"]}",
     "${var.vpc["subnet_public_1d"]}",
   ]
+
+  access_logs {
+    bucket  = "${aws_s3_bucket.webapi_logs.bucket}"
+    enabled = true
+  }
 
   tags {
     Name = "${terraform.workspace}-${lookup(var.webapi, "${terraform.env}.name", var.webapi["default.name"])}-alb"
@@ -145,6 +149,28 @@ resource "aws_alb_listener" "webapi_listener" {
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-2016-08"
   certificate_arn   = "${lookup(var.acm, "main_arn")}"
+}
+
+resource "aws_launch_configuration" "webapi" {
+  name_prefix                 = "${terraform.workspace}-${lookup(var.webapi, "${terraform.env}.name", var.webapi["default.name"])}-"
+  image_id                    = "${lookup(var.webapi, "${terraform.env}.ami", var.webapi["default.ami"])}"
+  instance_type               = "${lookup(var.webapi, "${terraform.env}.instance_type", var.webapi["default.instance_type"])}"
+  key_name                    = "${aws_key_pair.ssh_key_pair.id}"
+  associate_public_ip_address = false
+
+  root_block_device {
+    volume_type = "${lookup(var.webapi, "${terraform.env}.volume_type", var.webapi["default.volume_type"])}"
+    volume_size = "${lookup(var.webapi, "${terraform.env}.volume_size", var.webapi["default.volume_size"])}"
+  }
+
+  iam_instance_profile = "${lookup(var.iam, "webserver_instance_profile_name")}"
+  security_groups      = ["${aws_security_group.webapi.id}"]
+
+  enable_monitoring = true
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_autoscaling_group" "webapi_autoscaling_group" {

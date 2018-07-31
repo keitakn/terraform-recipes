@@ -73,3 +73,5 @@ variable "webapi_domain_name" {
 
   default = ""
 }
+
+data "aws_elb_service_account" "aws_elb_service_account" {}

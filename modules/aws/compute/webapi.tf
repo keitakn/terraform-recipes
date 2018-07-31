@@ -112,7 +112,8 @@ resource "aws_alb" "webapi_alb" {
   ]
 
   access_logs {
-    bucket = "${aws_s3_bucket.webapi_logs.bucket}"
+    bucket  = "${aws_s3_bucket.webapi_logs.bucket}"
+    enabled = true
   }
 
   tags {

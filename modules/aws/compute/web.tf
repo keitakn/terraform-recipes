@@ -140,7 +140,8 @@ resource "aws_alb" "web_alb" {
   ]
 
   access_logs {
-    bucket = "${aws_s3_bucket.web_alb_logs.bucket}"
+    bucket  = "${aws_s3_bucket.web_alb_logs.bucket}"
+    enabled = true
   }
 
   tags {

@@ -101,6 +101,29 @@ resource "aws_launch_configuration" "webapi" {
   }
 }
 
+resource "aws_s3_bucket" "webapi_logs" {
+  bucket        = "${terraform.workspace}-${lookup(var.common, "${terraform.env}.project", var.common["default.project"])}-webapi-alb-logs"
+  policy        = "${data.aws_iam_policy_document.put_alb_logs.json}"
+  force_destroy = true
+}
+
+data "aws_elb_service_account" "alb_log" {}
+
+data "aws_iam_policy_document" "put_alb_logs" {
+  "statement" {
+    actions = ["s3:PutObject"]
+
+    principals {
+      identifiers = ["${data.aws_elb_service_account.alb_log.id}"]
+      type        = "AWS"
+    }
+
+    resources = [
+      "arn:aws:s3:::${terraform.workspace}-${lookup(var.common, "${terraform.env}.project", var.common["default.project"])}-webapi-alb-logs/*",
+    ]
+  }
+}
+
 resource "aws_alb" "webapi_alb" {
   name            = "${terraform.workspace}-${lookup(var.webapi, "${terraform.env}.name", var.webapi["default.name"])}-alb"
   internal        = false
@@ -111,6 +134,10 @@ resource "aws_alb" "webapi_alb" {
     "${var.vpc["subnet_public_1c"]}",
     "${var.vpc["subnet_public_1d"]}",
   ]
+
+  access_logs {
+    bucket = "${aws_s3_bucket.webapi_logs.bucket}"
+  }
 
   tags {
     Name = "${terraform.workspace}-${lookup(var.webapi, "${terraform.env}.name", var.webapi["default.name"])}-alb"

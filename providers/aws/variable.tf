@@ -85,7 +85,7 @@ variable "web" {
     default.instance_type = "t2.micro"
     default.volume_type   = "gp2"
     default.volume_size   = "30"
-    stg.ami               = "ami-02c0116b3d7c49b9b"
+    stg.ami               = "ami-0cf1c43bdcd7f7898"
     stg.instance_type     = "t2.micro"
   }
 }
@@ -99,7 +99,7 @@ variable "webapi" {
     default.instance_type = "t2.micro"
     default.volume_type   = "gp2"
     default.volume_size   = "30"
-    stg.ami               = "ami-0643c79563983be55"
+    stg.ami               = "ami-0f8aa99e6315aabf1"
     stg.instance_type     = "t2.micro"
   }
 }

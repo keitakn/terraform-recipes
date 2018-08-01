@@ -311,7 +311,7 @@ resource "aws_network_acl" "public" {
     protocol   = "tcp"
     rule_no    = 140
     to_port    = 22
-    cidr_block = "${aws_vpc.vpc.cidr_block}"
+    cidr_block = "0.0.0.0/0"
   }
 
   egress {

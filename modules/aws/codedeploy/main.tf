@@ -28,3 +28,14 @@ resource "aws_iam_policy_attachment" "codedeploy_role_attachment" {
 resource "aws_codedeploy_app" "webapi" {
   name = "${terraform.workspace}-webapi"
 }
+
+resource "aws_codedeploy_deployment_group" "webapi_inplace_deploy" {
+  app_name               = "${aws_codedeploy_app.webapi.name}"
+  deployment_group_name  = "inplace"
+  service_role_arn       = "${aws_iam_role.codedeploy_role.arn}"
+  deployment_config_name = "CodeDeployDefault.AllAtOnce"
+
+  lifecycle {
+    ignore_changes = ["*"]
+  }
+}

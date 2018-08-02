@@ -24,6 +24,8 @@ rds_local_slave_domain_name  = "sample-db-slave"
 main_domain_name             = "sample.com"
 web_domain_name              = "www"
 webapi_domain_name           = "api"
+webapi_codedeploy_app_name   = "sample-api"
+webapi_deploy_bucket_name    = "deploy-sample-api"
 ```
 
 `access_key`, `secret_key` は非常に強力な権限を持ったIAMアクセスキーです。
@@ -153,6 +155,22 @@ WebAPIを模倣したサービスはHTTPSで通信を行うので、AWS Certific
 - `stg-api.sample.com`（ステージング環境）
 - `qa-api.sample.com`（QA環境）
 - `prd-api.sample.com`（本番環境）
+
+### `webapi_codedeploy_app_name`
+
+WebAPIで利用するCodeDeployのアプリケーション名を入れてください。
+
+頭に環境変数が自動的に追加されます。
+
+（例）workspaceが `stg` の場合は `stg-sample-api` のようになります。
+
+### `webapi_deploy_bucket_name`
+
+WebAPIのデプロイ用ソースコードを格納するS3Bucket名を入れてください。
+
+頭に環境変数が自動的に追加されます。
+
+（例）workspaceが `stg` の場合は `s3://deploy-sample-api` のようになります。
 
 ### workspaceの設定
 

@@ -44,5 +44,6 @@ module "acm" {
 }
 
 module "codedeploy" {
-  source = "../../modules/aws/codedeploy"
+  source                    = "../../modules/aws/codedeploy"
+  webapi_deploy_bucket_name = "${var.webapi_deploy_bucket_name}"
 }

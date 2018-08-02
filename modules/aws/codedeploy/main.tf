@@ -39,3 +39,8 @@ resource "aws_codedeploy_deployment_group" "webapi_inplace_deploy" {
     ignore_changes = ["*"]
   }
 }
+
+resource "aws_s3_bucket" "webapi_deploy_bucket" {
+  bucket        = "${terraform.workspace}-${var.webapi_deploy_bucket_name}"
+  force_destroy = true
+}

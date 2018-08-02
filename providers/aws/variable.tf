@@ -164,3 +164,9 @@ variable "webapi_domain_name" {
 
   default = ""
 }
+
+variable "webapi_deploy_bucket_name" {
+  type = "string"
+
+  default = ""
+}

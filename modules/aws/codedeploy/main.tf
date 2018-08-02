@@ -34,6 +34,10 @@ resource "aws_codedeploy_deployment_group" "webapi_inplace_deploy" {
   deployment_group_name  = "inplace"
   service_role_arn       = "${aws_iam_role.codedeploy_role.arn}"
   deployment_config_name = "CodeDeployDefault.AllAtOnce"
+
+  lifecycle {
+    ignore_changes = ["*"]
+  }
 }
 
 resource "aws_s3_bucket" "webapi_deploy_bucket" {

@@ -159,6 +159,18 @@ variable "web_domain_name" {
   default = ""
 }
 
+variable "web_codedeploy_app_name" {
+  type = "string"
+
+  default = ""
+}
+
+variable "web_deploy_bucket_name" {
+  type = "string"
+
+  default = ""
+}
+
 variable "webapi_domain_name" {
   type = "string"
 

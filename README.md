@@ -24,6 +24,8 @@ rds_local_slave_domain_name  = "sample-db-slave"
 main_domain_name             = "sample.com"
 web_domain_name              = "www"
 webapi_domain_name           = "api"
+web_codedeploy_app_name      = "sample-web"
+web_deploy_bucket_name       = "deploy-sample-web"
 webapi_codedeploy_app_name   = "sample-api"
 webapi_deploy_bucket_name    = "deploy-sample-api"
 ```
@@ -155,6 +157,23 @@ WebAPIを模倣したサービスはHTTPSで通信を行うので、AWS Certific
 - `stg-api.sample.com`（ステージング環境）
 - `qa-api.sample.com`（QA環境）
 - `prd-api.sample.com`（本番環境）
+
+### `web_codedeploy_app_name`
+
+Webで利用するCodeDeployのアプリケーション名を入れてください。
+
+頭に環境変数が自動的に追加されます。
+
+（例）workspaceが `stg` の場合は `stg-sample-web` のようになります。
+
+### `web_deploy_bucket_name`
+
+Webのデプロイ用ソースコードを格納するS3Bucket名を入れてください。
+
+頭に環境変数が自動的に追加されます。
+
+（例）workspaceが `stg` の場合は `s3://deploy-sample-web` のようになります。
+
 
 ### `webapi_codedeploy_app_name`
 
